@@ -1,33 +1,88 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; //bloock of imports that point to packages
+import 'package:flutter_app_2/quiz.dart';
+//first package import is placed
+//then user imports are placed
+
+import './quiz.dart';
+import './result.dart';
 
 void main() {
-  //fluuter app the custom class we created construtor creates an or an object
-  //is passed.which in turn latter the app cal the build methods which returns
-  //widget to draw on screen//wriitten by fluuter in package in material.dart
-
   runApp(FlutterApp()); //run app takes a widget and recreate on the screen
   //tells flutter tu draw on the screen render
 }
 
-//pascalnaming scheme no sapce inside or _ for classes
-//widgets areobjects that are displayed on scren
-//the screen itself is made up of many widgets in a tree model
-//to build our own widget we extend a predefined widget class from a package
-//which does the rendering work while our class defines how it should be rendered
+class FlutterApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _FlutterAppState();
+  }
+}
 
-class FlutterApp extends StatelessWidget {
-//need to impement abstract method from parent class with context objects which stores metadata//
-//build overreidefluutter will cal build app to render
+class _FlutterAppState extends State<FlutterApp> {
+  final _questions = const [
+    {
+      "questionText": "what\'s is your fav color",
+      "answers": [
+        {'text': "Red", "score": 5},
+        {'text': "yellow", "score": 8},
+        {'text': "green", "score": 1},
+        {'text': "blue", "score": 3},
+        {'text': "black", "score": 2}
+      ]
+    },
+    {
+      "questionText": "what\'s is your fav animal?",
+      "answers": [
+        {'text': "frog", "score": 5},
+        {'text': "cat", "score": 8},
+        {'text': "monkey", "score": 1},
+        {'text': "donkey", "score": 3},
+        {'text': "minimonk", "score": 2}
+      ]
+    },
+    {
+      "questionText": "what\'s is your fav game?",
+      "answers": [
+        {'text': "gta", "score": 5},
+        {'text': "forza", "score": 8},
+        {'text': "tomb raider", "score": 1},
+        {'text': "space", "score": 3},
+        {'text': "dongkey konf", "score": 2}
+      ]
+    },
+  ];
+  //persistant data for fluter app
+  var _questionIndex = 0; //flutter dont automatically re render
+  int _totalScore = 0;
+
+  void _reset() {
+    setState(() {
+      _totalScore = 0;
+      _questionIndex = 0;
+    });
+  }
+
+  void _onPressAnswer(int score) {
+    _totalScore += score;
+    if (_questionIndex < _questions.length) {}
+    setState(() {
+      //flutter keeps track of what is changing inside the setstate and change widge accordingly
+      _questionIndex++;
+    });
+    print("yomf");
+  }
 
   Widget build(BuildContext context) {
-    //metadata about widget its posiotion and xy  ,widget ree positin
-    //flutter provides the values of context when it callss it
-    //build basic app where for app,brings home core widget to cscreen
-    //MAterial app is a class and its it is constructor
     return MaterialApp(
-      home: Text('Hello'),
-    );
-    //at last of every widget we create we have to retrun a base widget which will always will
-    //be the package provided widget
+        home: Scaffold(
+            appBar: AppBar(
+              title: Text("AppTitle1O1"),
+            ),
+            body: ((_questionIndex < _questions.length)
+                ? (Quiz(
+                    questions: _questions,
+                    questionincrementer: _onPressAnswer,
+                    questionIndex: _questionIndex))
+                : Result(_totalScore, _reset))));
   }
 }
